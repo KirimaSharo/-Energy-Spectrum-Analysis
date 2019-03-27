@@ -524,6 +524,29 @@ public class Counts
         return a0 + a1 * x + a2 * x * x + a3 * x * x * x;
     }
 
+    /// <summary>
+    /// with External Random for High Concurrency
+    /// </summary>
+    /// <param name="u"></param>
+    /// <param name="s"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    private double GaussRand(double u,double s,Random r)
+    {
+        double r1 = 1 - r.NextDouble();
+        double r2 = 1 - r.NextDouble();
+        double R = Sqrt(-2 * Log(r1));
+        double Sita = 2 * PI * r2;
+        double Z = R * Sin(Sita);
+        Z = u + Z * s;
+        return Z;
+    }
+
+    private double GaussRand(double u, double s)
+    {
+        Random r = new Random();
+        return GaussRand(u, s, r);
+    }
 
     private struct partial
     {
@@ -752,8 +775,8 @@ public class Counts
             Random R = new Random();
             for (i = 0; i < np / 2; i++)
             {
-                int p1 = R.Next(np);
-                int p2 = R.Next(np);
+                int p1 = R.Next(0, np);
+                int p2 = R.Next(0, np);
                 Random r1 = new Random();
                 partial P1,P2;
 
@@ -788,6 +811,8 @@ public class Counts
                         for (j = 0; j <= n; j++)
                             for (k = 0; k < 3; k++)
                                 p[p1].bestparam[j, k] = P1.param[j, k];
+                        if (S1 < p[gbest].best)
+                            gbest = p1;
                     }
                     double vabs = 0;
                     for (j = 0; j <= n; j++)
@@ -811,6 +836,8 @@ public class Counts
                         for (j = 0; j <= n; j++)
                             for (k = 0; k < 3; k++)
                                 p[p2].bestparam[j, k] = P2.param[j, k];
+                        if (S2 < p[gbest].best)
+                            gbest = p2;
                     }
 
                     if(flags1)
@@ -835,9 +862,43 @@ public class Counts
                     
 
                 }
-                t = t * c;
+                
+            }
+            for (i = 0; i < np / 20; i++)
+            {
+                partial P1;
+                P1.param = new double[n + 1, 3];
+                P1.bestparam = new double[n + 1, 3];
+                P1.speed = new double[n + 1, 3];
+                P1.best = 0;
+                double G = GaussRand(1, 0.4, R);
+                int p1 = R.Next(0, np);
+                for (j = 0; j <= n; j++)
+                    for (k = 0; k < 3; k++)
+                    {
+                        P1.param[j, k] = p[p1].param[j, k] * G;
+                    }
+                double S1 = adaptivity(P1, n, start, end);
+                double s1 = adaptivity(p[p1], n, start, end);
+                double pr = R.NextDouble();
+                if (Exp((s1 - S1) / t) > pr)
+                {
+                    p[p1].param = P1.param;
+                    if (S1 < p[p1].best)
+                    {
+                        p[p1].best = S1;
+                        for (j = 0; j <= n; j++)
+                            for (k = 0; k < 3; k++)
+                                p[p1].bestparam[j, k] = P1.param[j, k];
+                        if (S1 < p[gbest].best)
+                            gbest = p1;
+                    }
+
+                }
 
             }
+            t = t * c;
+
             //SA_PSO
 
 

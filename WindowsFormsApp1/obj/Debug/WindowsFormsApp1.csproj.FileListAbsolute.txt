@@ -12,3 +12,16 @@ C:\Users\Cocoa\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\GLPLUS.d
 C:\Users\Cocoa\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\GLPLUS.pdb
 C:\Users\Cocoa\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\GLPLUS.xml
 C:\Users\Cocoa\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Form1.resources
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.exe.config
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.exe
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.pdb
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\bin\Debug\GLPLUS.pdb
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\bin\Debug\GLPLUS.xml
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Form1.resources
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.pdb
