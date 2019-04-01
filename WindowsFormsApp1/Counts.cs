@@ -932,6 +932,131 @@ public class Counts
         return r;
     }
 
+    public double LevenbergMarquardt(int n, int start, int end, int Maxtime, int np, double e1, double e2)
+    {
+        bool flag = false;
+        int nb = 3 * n + 2, nc = end - start + 1;
+        double v = 2;
+
+        Matrix b = new Matrix(nb, 1);
+        Matrix bnew = new Matrix(nb, 1);
+        Matrix h = new Matrix(nb, 1);
+        Matrix J = new Matrix(nc, nb);
+        Matrix JT = J.Transpose();
+        Matrix A = new Matrix(nb, nb);
+        Matrix Inb = new Matrix(nb, nb);
+        Matrix g = new Matrix(nb, 1);
+        Matrix f = new Matrix(nc, 1);
+        Matrix L;
+        double u = (double)nb, p,F,Fnew;
+
+        int i, j, k, l;
+
+        Smooth(end - start / 2 / n, -1);
+        for (i = 0; i < nb; i++)
+            for (j = 0; j < nb; j++)
+            {
+                if (i == j)
+                    Inb[i, j] = 1;
+                else
+                    Inb[i, j] = 0;
+            }
+            
+
+        j = 0;
+        for (i = start; i <= end; i++) 
+        {
+            j += this.count[i];
+        }
+
+        if (n == 1 || n == 2) 
+        {
+            for (i = 0; i < n; i++)
+            {
+                b[3 * i + 1, 0] = start + i * (end - start) / Math.Max(1, n - 1);
+                b[3 * i + 2, 0] = (end - start) / 2 / n;
+                b[3 * i, 0] = j / n;
+            }
+            b[3 * n + 1, 0] = (this.fix[end] - this.fix[start]) / (end - start);
+            b[3 * n, 0] = this.fix[start] - b[3 * n + 1, 0] * start;
+        }
+        else
+        {
+
+        }
+
+        for (i = 0; i < Maxtime; i++) 
+        {
+            for (j = 0; j < nc; j++)
+            {
+                int x = start + j;
+                f[j, 0] = -count[x];
+                for (k = 0; k < n; k++) 
+                {
+                    J[j, 3 * k] = Norm(x, b[3 * k + 1, 0], b[3 * k + 2, 0]);
+                    J[j, 3 * k + 1] = b[3 * k, 0] * J[j, 3 * k] * (x - b[3 * k + 1, 0]) / Pow(b[3 * k + 2, 0], 2);
+                    J[j, 3 * k + 2] = -b[3 * k, 0] * J[j, 3 * k] / b[3 * k + 2, 0] + J[j, 3 * k + 1] * (x - b[3 * k + 1, 0]) / b[3 * k + 2, 0];
+                    f[j, 0] += b[3 * k, 0] * J[j, 3 * k];
+                }
+                J[j, 3 * n] = 1;
+                J[j, 3 * n + 1] = x;
+                f[j, 0] += x * b[3 * n + 1, 0] + b[3 * n, 0];
+                
+            }
+            JT = J.Transpose();
+            f = -f;
+     Loop:  A = JT * J;
+            g = JT * f;
+            if (g.InfinityNorm() < e1) 
+            {
+                flag = true;
+                break;
+            }
+            A = A + u * Inb;
+            h = A.Inverse() * g;
+            if (h.InfinityNorm() < e2 * (b.InfinityNorm() + e2))
+            {
+                flag = true;
+                break;
+            }
+            bnew = b + h;
+            F = 0;
+            Fnew = 0;
+            for (j = 0; j < nc; j++)
+            {
+                int x = start + j;
+                F += f[j, 0];
+                for (k = 0; k < n; k++)
+                {
+                    Fnew += bnew[3 * k, 0] * Norm(x, bnew[3 * k + 1, 0], bnew[3 * k + 2, 0]);
+                }
+                Fnew += x * bnew[3 * n + 1, 0] + bnew[3 * n, 0];
+            }
+            p = F - Fnew;
+            L = -h.Transpose() * JT * f - 0.5 * h.Transpose() * JT * J * h;
+            p = p / L[0, 0];
+            if (p > 0) 
+            {
+                b = bnew;
+                u = Math.Max(1 / 3.0, 1 - Pow(2 * p - 1, 3));
+                v = 2;
+            }
+            else
+            {
+                u = u * v;
+                v = 2 * v;
+                goto Loop;
+            }
+
+
+        }
+
+        return b[1, 0];
+
+
+    }
+
+
 }
 
 

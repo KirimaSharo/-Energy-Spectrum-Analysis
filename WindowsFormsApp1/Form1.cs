@@ -50,7 +50,7 @@ namespace WindowsFormsApp1
             P1Width = panel1.Width;
             P1Height = panel1.Height;
 
-            PeakFindMode = 2;
+            PeakFindMode = 3;
             
 
             this.panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
@@ -313,6 +313,10 @@ namespace WindowsFormsApp1
             else if (PeakFindMode == 2)
             {
                 button2.Text = data.Partial(1, ROIStart, ROIEnd, 200, 1000).ToString();
+            }
+            else if (PeakFindMode == 3)
+            {
+                button2.Text = data.LevenbergMarquardt(1, ROIStart, ROIEnd, 2000, 1, 0, 0).ToString();
             }
 
 
