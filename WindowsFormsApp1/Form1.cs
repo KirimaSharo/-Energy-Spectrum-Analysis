@@ -25,6 +25,9 @@ namespace WindowsFormsApp1
         private double DrawTimeX;
         private double DrawTimeY;
 
+        private int smoothn;
+        private double[] drawsmooth;
+
         private int PeakFindMode;
         private int ROIStart;
         private int ROIEnd;
@@ -51,6 +54,7 @@ namespace WindowsFormsApp1
             P1Height = panel1.Height;
 
             PeakFindMode = 3;
+            原始数据RawDataToolStripMenuItem.Checked = true;
             
 
             this.panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
@@ -76,16 +80,25 @@ namespace WindowsFormsApp1
             int climit = (int)Ceiling(panel1.Width / DrawTimeX / dx + DataOriginofDrawX % 1);
             int nlimit = (int)Ceiling(panel1.Height / DrawTimeY / dy + DataOriginofDrawY % 1);
 
-            
+            double c = 0;
 
             GL.glClear(GLCONST.GL_COLOR_BUFFER_BIT);
             GL.glViewport(-originX, -originY, (int)(climit * DrawTimeX * dx), (int)(nlimit * DrawTimeY * dy));
             GL.glPointSize((float)(dx*DrawTimeX));
-            GL.glBegin(GLCONST.GL_POINTS);
+            GL.glBegin(GLCONST.GL_LINES);
             GL.glColor3(1.0, 0, 0);
             for (int i = (int)(DataOriginofDrawX); i < Min(data.TotalChannel, DataOriginofDrawX + climit); i++)
             {
-                GL.glVertex3(2.0 * (i - (int)DataOriginofDrawX) / climit - 1, 2.0 * ((double)data.GetNumber(0, i) - (int)DataOriginofDrawY) / nlimit - 1, 0);
+                if(原始数据RawDataToolStripMenuItem.Checked)
+                {
+                    c = data.GetNumber(0, i);
+                }
+                else if(光滑SmoothToolStripMenuItem.Checked)
+                {
+                    c = drawsmooth[i];
+                }
+                GL.glVertex3(2.0 * (i - (int)DataOriginofDrawX) / climit - 1, 2.0 * (c - (int)DataOriginofDrawY) / nlimit - 1, 0);
+                GL.glVertex3(2.0 * (i - (int)DataOriginofDrawX) / climit - 1, 2.0 * (0 - (int)DataOriginofDrawY) / nlimit - 1, 0);
             }
             GL.glEnd();
             GL.glFlush();
@@ -316,7 +329,7 @@ namespace WindowsFormsApp1
             }
             else if (PeakFindMode == 3)
             {
-                button2.Text = data.LevenbergMarquardt(1, ROIStart, ROIEnd, 2000, 1, 0, 0).ToString();
+                button2.Text = data.LevenbergMarquardt(2, ROIStart, ROIEnd, 5000, 1, 0, 0).ToString();
             }
 
 
@@ -348,6 +361,55 @@ namespace WindowsFormsApp1
             save.ShowDialog();
         }
 
-        
+        private void 原始数据RawDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            原始数据RawDataToolStripMenuItem.Checked = true;
+            光滑SmoothToolStripMenuItem.Checked = false;
+        }
+
+        private void 光滑SmoothToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            原始数据RawDataToolStripMenuItem.Checked = false;
+            光滑SmoothToolStripMenuItem.Checked = true;
+            
+        }
+
+        private void 参数自动ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (data == null)
+                return;
+            参数自动ToolStripMenuItem.Checked = true;
+            原始数据RawDataToolStripMenuItem.Checked = false;
+            光滑SmoothToolStripMenuItem.Checked = true;
+            smoothn = data.TotalChannel / 20;
+            data.Smooth(smoothn, ref drawsmooth);
+            Draw();
+        }
+
+        private void 参数设置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (data == null)
+                return;
+            参数自动ToolStripMenuItem.Checked = false;
+            原始数据RawDataToolStripMenuItem.Checked = false;
+            光滑SmoothToolStripMenuItem.Checked = true;
+            int[] n = new int[2];
+            n[0] = smoothn;
+            n[1] = data.TotalChannel / 3;
+            Form f2 = new Form2(n);
+            f2.FormClosing +=new FormClosingEventHandler(Form2Closing);
+            f2.FormClosed += new FormClosedEventHandler(Form2Closed);
+            f2.Show();
+        }
+        private void Form2Closing(object sender,EventArgs e)
+        {
+            smoothn = ((Form2)sender).N[0];
+        }
+
+        private void Form2Closed(object sender, EventArgs e)
+        {
+            data.Smooth(smoothn, ref drawsmooth);
+            Draw();
+        }
     }
 }

@@ -25,3 +25,4 @@ C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\Wi
 C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
 C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe
 C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.pdb
+C:\Users\Cocoa\Documents\-Energy-Spectrum-Analysis\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Form2.resources
