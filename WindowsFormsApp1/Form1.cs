@@ -312,28 +312,59 @@ namespace WindowsFormsApp1
         {
             if (ROIEnd <= ROIStart)
                 return;
+            Peak[] ret=null;
             if (PeakFindMode == 0)
             {
                 data.Smooth((ROIEnd - ROIStart) / 6, -1);
                 while (data.Maxium(0, ROIStart, ROIEnd) > 1)
                     data.Smooth((ROIEnd - ROIStart) / 6, 1);
-                button2.Text = data.Maxium(1, ROIStart, ROIEnd).ToString();
+                    
+                ret = new Peak[1];
+                ret[0].U = data.Maxium(1, ROIStart, ROIEnd);
+                int i = (int)ret[0].U;
+                int j = i + 1;
+                int m = (int)(ret[0].U + 0.5);
+                double s = 0;
+                while (data.GetNumber(1, i - 1) - data.GetNumber(1, i - 2) > data.GetNumber(1, i) - data.GetNumber(1, i - 1) && i >= 0)
+                {
+                    s += data.GetNumber(0, i);
+                    i--; 
+                }
+                while (data.GetNumber(1, j + 1) - data.GetNumber(1, j + 2) > data.GetNumber(1, j) - data.GetNumber(1, j + 1) && j < data.TotalChannel)
+                {
+                    s += data.GetNumber(0, j);
+                    j++;
+                }
+                m = j - i;
+                ret[0].S = m;
+                ret[0].A = s;
+
             }
             else if (PeakFindMode == 1)
             {
-                button2.Text = data.ExpectMax(1, ROIStart, ROIEnd).ToString();
+                ret = data.ExpectMax(1, ROIStart, ROIEnd);
             }
             else if (PeakFindMode == 2)
             {
-                button2.Text = data.Partial(1, ROIStart, ROIEnd, 200, 1000).ToString();
+                ret = data.Partial(1, ROIStart, ROIEnd, 200, 1000);
             }
             else if (PeakFindMode == 3)
             {
-                button2.Text = data.LevenbergMarquardt(2, ROIStart, ROIEnd, 5000, 1, 0, 0).ToString();
+                ret = data.LevenbergMarquardt(3, ROIStart, ROIEnd, 1000, 1, 0, 0);
             }
 
-
-
+            if (ret == null)
+                return;
+            listView1.BeginUpdate();
+            for(int i=0;i<ret.Length;i++)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = ret[i].U.ToString();
+                lvi.SubItems.Add(ret[i].S.ToString());
+                lvi.SubItems.Add(ret[i].A.ToString());
+                this.listView1.Items.Add(lvi);
+            }
+            listView1.EndUpdate();
         }
 
 

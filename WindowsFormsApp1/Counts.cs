@@ -6,6 +6,12 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
+    public struct Peak
+    {
+        public double A;
+        public double U;
+        public double S;
+    }
     public class Counts
     {
         private int totalchannel = 0;
@@ -290,7 +296,7 @@ namespace WindowsFormsApp1
         /// </param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public double ExpectMax(int n, int start, int end)
+        public Peak[] ExpectMax(int n, int start, int end)
         {
             return ExpectMax(n, start, end, 100);
         }
@@ -303,10 +309,10 @@ namespace WindowsFormsApp1
         /// </param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public double ExpectMax(int n, int start, int end, int Maxtime)
+        public Peak[] ExpectMax(int n, int start, int end, int Maxtime)
         {
             if (n != 1 && n != 2)
-                return -1;
+                return null;
 
             int i, j, k, l;
             double[,] Ax = new double[3, 3];
@@ -415,7 +421,7 @@ namespace WindowsFormsApp1
                     a[0] = a[0] / IntegrateNorm(u[0], s[0], start, end);
                     if (double.IsNaN(u[0]) || double.IsInfinity(u[0]))
                     {
-                        return -1;
+                        return null;
                     }
                     U[0] = u[0];
                     A[0] = a[0];
@@ -466,8 +472,11 @@ namespace WindowsFormsApp1
                     }
 
                 }
-
-                return U[0];
+                Peak[] ret = new Peak[1];
+                ret[0].U = U[0];
+                ret[0].S = S[0];
+                ret[0].A = A[0];
+                return ret;
 
             }
             else
@@ -552,7 +561,7 @@ namespace WindowsFormsApp1
                     a[0] = a[0] / IntegrateNorm(u[0], s[0], start, end);
                     if (double.IsNaN(u[0]) || double.IsInfinity(u[0]) || double.IsNaN(u[1]) || double.IsInfinity(u[1]))
                     {
-                        return -1;
+                        return null;
                     }
                     U[0] = u[0];
                     A[0] = a[0];
@@ -605,7 +614,14 @@ namespace WindowsFormsApp1
                     }
 
                 }
-                return U[0];
+                Peak[] ret = new Peak[2];
+                ret[0].U = U[0];
+                ret[0].S = S[0];
+                ret[0].A = A[0];
+                ret[1].U = U[1];
+                ret[1].S = S[1];
+                ret[1].A = A[1];
+                return ret;
             }
 
 
@@ -693,10 +709,10 @@ namespace WindowsFormsApp1
         }
 
 
-        public double Partial(int n, int start, int end, int Maxtime, int np)
+        public Peak[] Partial(int n, int start, int end, int Maxtime, int np)
         {
             if ((n != 1 && n != 2 && n != 3) || np < 10 || Maxtime < 10 || start >= end)
-                return -1;
+                return null;
 
             partial[] p = new partial[np];
             int gbest;
@@ -775,7 +791,7 @@ namespace WindowsFormsApp1
                 if (s >= 0)
                     p[i].best = s;
                 else
-                    return -1;
+                    return null;
                 if (s <= best)
                 {
                     gbest = i;
@@ -889,7 +905,7 @@ namespace WindowsFormsApp1
 
                     s = adaptivity(p[i], n, start, end);
                     if (s < 0)
-                        return -1;
+                        return null;
                     else if (s < p[i].best)
                     {
                         p[i].best = s;
@@ -1041,7 +1057,14 @@ namespace WindowsFormsApp1
 
                 w -= wp;
             }
-            return p[gbest].bestparam[1, 1];
+            Peak[] ret = new Peak[n];
+            for(i=0;i<n;i++)
+            {
+                ret[i].U = p[gbest].bestparam[i + 1, 1];
+                ret[i].S = p[gbest].bestparam[i + 1, 2];
+                ret[i].A = p[gbest].bestparam[i + 1, 0];
+            }
+            return ret;
 
         }
 
@@ -1068,8 +1091,10 @@ namespace WindowsFormsApp1
             return r;
         }
 
-        public double LevenbergMarquardt(int n, int start, int end, int Maxtime, int np, double e1, double e2)
+        public Peak[] LevenbergMarquardt(int n, int start, int end, int Maxtime, int np, double e1, double e2)
         {
+            if (n < 1 || end <= start || np < 1 || e1 < 0 || e2 < 0 || Maxtime < 1)
+                return null;
             bool flag = false;
             int nb = 3 * n + 2, nc = end - start + 1;
             double v = 2;
@@ -1105,21 +1130,16 @@ namespace WindowsFormsApp1
                 j += this.count[i];
             }
 
-            if (n == 1 || n == 2)
-            {
-                for (i = 0; i < n; i++)
-                {
-                    b[3 * i + 1, 0] = start + i * (end - start) / Math.Max(1, n - 1);
-                    b[3 * i + 2, 0] = (end - start) / 2 / n;
-                    b[3 * i, 0] = j / n;
-                }
-                b[3 * n + 1, 0] = (this.fix[end] - this.fix[start]) / (end - start);
-                b[3 * n, 0] = this.fix[start] - b[3 * n + 1, 0] * start;
-            }
-            else
-            {
 
+            for (i = 0; i < n; i++)
+            {
+                b[3 * i + 1, 0] = start + i * (end - start) / Math.Max(1, n - 1);
+                b[3 * i + 2, 0] = (end - start) / 2 / n;
+                b[3 * i, 0] = j / n;
             }
+            b[3 * n + 1, 0] = (this.fix[end] - this.fix[start]) / (end - start);
+            b[3 * n, 0] = this.fix[start] - b[3 * n + 1, 0] * start;
+
 
             for (i = 0; i < Maxtime; i++)
             {
@@ -1187,7 +1207,14 @@ namespace WindowsFormsApp1
 
             }
 
-            return b[1, 0];
+            Peak[] ret = new Peak[n];
+            for (i = 0; i < n; i++)
+            {
+                ret[i].U = b[3 * i + 1, 0];
+                ret[i].S = b[3 * i + 2, 0];
+                ret[i].A = b[3 * i, 0];
+            }
+            return ret;
 
 
         }
