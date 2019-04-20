@@ -1218,8 +1218,62 @@ namespace WindowsFormsApp1
 
 
         }
+        public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd, ListView listView1)
+        {
+            Peak[] ret = null;
+            if (PeakFindMode == 0)
+            {
+                this.Smooth((ROIEnd - ROIStart) / 6, -1);
+                while (this.Maxium(0, ROIStart, ROIEnd) > 1)
+                    this.Smooth((ROIEnd - ROIStart) / 6, 1);
 
+                ret = new Peak[1];
+                ret[0].U = this.Maxium(1, ROIStart, ROIEnd);
+                int i = (int)ret[0].U;
+                int j = i + 1;
+                int m = (int)(ret[0].U + 0.5);
+                double s = 0;
+                while (this.GetNumber(1, i - 1) - this.GetNumber(1, i - 2) > this.GetNumber(1, i) - this.GetNumber(1, i - 1) && i >= 0)
+                {
+                    s += this.GetNumber(0, i);
+                    i--;
+                }
+                while (this.GetNumber(1, j + 1) - this.GetNumber(1, j + 2) > this.GetNumber(1, j) - this.GetNumber(1, j + 1) && j < this.TotalChannel)
+                {
+                    s += this.GetNumber(0, j);
+                    j++;
+                }
+                m = j - i;
+                ret[0].S = m;
+                ret[0].A = s;
 
+            }
+            else if (PeakFindMode == 1)
+            {
+                ret = this.ExpectMax(1, ROIStart, ROIEnd);
+            }
+            else if (PeakFindMode == 2)
+            {
+                ret = this.Partial(1, ROIStart, ROIEnd, 200, 1000);
+            }
+            else if (PeakFindMode == 3)
+            {
+                pf3 = new Peakfind3(this.LevenbergMarquardt);
+                pf3.BeginInvoke(3, ROIStart, ROIEnd, 1000, 1, 0, 0, new AsyncCallback(Peakfind3Finished), null);
+            }
+            
+        }
+        delegate Peak[] Peakfind3(int n, int start, int end, int Maxtime, int np, double e1, double e2);
+        static Peakfind3 pf3;
+        public delegate void ListViewUpdate(Peak[] ret);
+        public static ListViewUpdate listviewup;
+        static void Peakfind3Finished(IAsyncResult result)
+        {
+            Peak[] ret = pf3.EndInvoke(result);
+            if (ret == null)
+                return;
+            listviewup.Invoke(ret);
+        }
     }
 }
 
