@@ -104,6 +104,182 @@ namespace WindowsFormsApp1
             GL.glEnd();
             GL.glFlush();
             GLAUX.SwapBuffers(panel1.Handle);
+            
+
+            double d1 = DataOriginofDrawX + climit;
+            double d2 = DataOriginofDrawY + nlimit;
+            int StrPxC = 12;
+            int StrPxN = 14;
+            if(d1<10000000)
+                while (d1 >= 10)
+                {
+                    d1 = d1 / 10;
+                    StrPxC += 6;
+                }
+            else
+            {
+                    StrPxC = 48;
+            }
+
+            int Xaxistime = 1;
+            int Yaxistime = 1;
+            while (Xaxistime * DrawTimeX * dx < StrPxC)
+            {
+                Xaxistime *= 2;
+                if (Xaxistime * DrawTimeX * dx < StrPxC)
+                {
+                    Xaxistime = Xaxistime / 2;
+                    Xaxistime *= 5;
+                }
+                if (Xaxistime * DrawTimeX * dx < StrPxC)
+                    Xaxistime *= 2;
+            }
+            while (Yaxistime * DrawTimeY * dy < StrPxN)
+            {
+                Yaxistime *= 2;
+                if (Yaxistime * DrawTimeY * dy < StrPxN)
+                {
+                    Yaxistime = Yaxistime / 2;
+                    Yaxistime *= 5;
+                }
+                if (Yaxistime * DrawTimeY * dy < StrPxN)
+                    Yaxistime *= 2;
+            }
+
+
+            Graphics G = panel2.CreateGraphics();
+
+            Pen P = new Pen(Color.Black);
+            Brush B = new SolidBrush(Color.Black);
+            G.Clear(Color.White);
+            G.DrawLine(P, panel1.Location.X - 1, 0, panel1.Location.X - 1, panel1.Height + 5);
+            G.DrawLine(P, panel1.Location.X - 6, panel1.Height, panel2.Width, panel1.Height);
+            string str;
+            for (int i = Xaxistime * (int)(DataOriginofDrawX / Xaxistime); i < DataOriginofDrawX + climit; i += Xaxistime) 
+            {
+                float x = (float)(panel1.Location.X - 1 + (i - DataOriginofDrawX) * (DrawTimeX * dx));
+                if (x < panel1.Location.X) 
+                    continue;
+                G.DrawLine(P, x, panel1.Height, x, panel1.Height + 5);
+                if (x < panel1.Location.X + 18 + 0.5 * StrPxC) 
+                    continue;
+                if(i<10000000)
+                {
+                    str = i.ToString();
+                }
+                else
+                {
+                    double i1 = i;
+                    int j = 0;
+                    while (i1 >= 10)
+                    {
+                        i1 = i1 / 10;
+                        j++;
+                    }
+                    string str1;
+                    str1 = j.ToString();
+                    if (str1.Length >= 6)
+                        return;
+                    str = i1.ToString();
+                    str = str.Substring(0, 6 - str1.Length);
+                    str += "E";
+                    str += str1;
+                }
+                G.DrawString(str, new Font("Calibri", 9), B, x - str.Length * 3 - 2, panel1.Height + 5);
+            }
+
+
+            for (int i = Yaxistime * (int)(DataOriginofDrawY / Yaxistime); i < DataOriginofDrawY + nlimit; i += Yaxistime)
+            {
+                float y = (float)(panel1.Height - (i - DataOriginofDrawY) * (DrawTimeY * dy));
+                if (y > panel1.Height)
+                    continue;
+                G.DrawLine(P, panel1.Location.X - 1, y, panel1.Location.X - 6, y);
+                if (y > panel1.Height - 7) 
+                    continue;
+                if (i < 10000000)
+                {
+                    str = i.ToString();
+                }
+                else
+                {
+                    double i1 = i;
+                    int j = 0;
+                    while (i1 >= 10)
+                    {
+                        i1 = i1 / 10;
+                        j++;
+                    }
+                    string str1;
+                    str1 = j.ToString();
+                    if (str1.Length >= 6)
+                        return;
+                    str = i1.ToString();
+                    str = str.Substring(0, 6 - str1.Length);
+                    str += "E";
+                    str += str1;
+                }
+                G.DrawString(str, new Font("Calibri", 9), B, panel1.Location.X - 6-6*str.Length, y-6);
+            }
+
+            float ii= (float)DataOriginofDrawX;
+            if (ii < 100000)
+            {
+                str = ii.ToString();
+                if (str.Length > 7)
+                {
+                    str = str.Substring(0, 7);
+                }
+            }
+            else
+            {
+                double i1 = ii;
+                int j = 0;
+                while (i1 >= 10)
+                {
+                    i1 = i1 / 10;
+                    j++;
+                }
+                string str1;
+                str1 = j.ToString();
+                if (str1.Length >= 6)
+                    return;
+                str = i1.ToString();
+                str = str.Substring(0, 6 - str1.Length);
+                str += "E";
+                str += str1;
+            }
+            G.DrawString(str, new Font("Calibri", 9), B, panel1.Location.X - str.Length * 3 - 2, panel1.Height + 5);
+
+            ii = (float)DataOriginofDrawY;
+            if (ii < 100000)
+            {
+                str = ii.ToString();
+                if (str.Length > 7)
+                {
+                    str = str.Substring(0, 7);
+                }
+            }
+            else
+            {
+                double i1 = ii;
+                int j = 0;
+                while (i1 >= 10)
+                {
+                    i1 = i1 / 10;
+                    j++;
+                }
+                string str1;
+                str1 = j.ToString();
+                if (str1.Length >= 6)
+                    return;
+                str = i1.ToString();
+                str = str.Substring(0, 6 - str1.Length);
+                str += "E";
+                str += str1;
+            }
+            G.DrawString(str, new Font("Calibri", 9), B, panel1.Location.X - 6 - 6 * str.Length, panel1.Height-6);
+
         }
 
 
