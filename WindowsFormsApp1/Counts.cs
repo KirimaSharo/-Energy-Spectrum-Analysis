@@ -819,6 +819,7 @@ namespace WindowsFormsApp1
 
             for (l = 0; l < Maxtime; l++)
             {
+                peakfinding.Invoke(l, Maxtime);
                 for (i = 0; i < np; i++)
                 {
                     Random r = new Random(int.Parse(DateTime.Now.ToString("HHmmssfff")) + i);
@@ -1143,6 +1144,7 @@ namespace WindowsFormsApp1
 
             for (i = 0; i < Maxtime; i++)
             {
+                peakfinding.Invoke(i, Maxtime);
                 for (j = 0; j < nc; j++)
                 {
                     int x = start + j;
@@ -1215,9 +1217,8 @@ namespace WindowsFormsApp1
                 ret[i].A = b[3 * i, 0];
             }
             return ret;
-
-
         }
+
         public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd, ListView listView1)
         {
             Peak[] ret = null;
@@ -1250,29 +1251,52 @@ namespace WindowsFormsApp1
             }
             else if (PeakFindMode == 1)
             {
-                ret = this.ExpectMax(1, ROIStart, ROIEnd);
+                pf1 = new Peakfind1(this.ExpectMax);
+                pf1.BeginInvoke(1, ROIStart, ROIEnd, 500, new AsyncCallback(Peakfind2Finished), null);
             }
             else if (PeakFindMode == 2)
             {
-                ret = this.Partial(1, ROIStart, ROIEnd, 200, 1000);
+                pf2 = new Peakfind2(this.Partial);
+                pf2.BeginInvoke(1, ROIStart, ROIEnd, 200, 200,new AsyncCallback(Peakfind2Finished), null);
             }
             else if (PeakFindMode == 3)
             {
                 pf3 = new Peakfind3(this.LevenbergMarquardt);
-                pf3.BeginInvoke(3, ROIStart, ROIEnd, 1000, 1, 0, 0, new AsyncCallback(Peakfind3Finished), null);
+                pf3.BeginInvoke(1, ROIStart, ROIEnd, 1000, 1, 0, 0, new AsyncCallback(Peakfind3Finished), null);
             }
-            
+            if (ret == null)
+                return;
+            peakfound.Invoke(ret);
         }
+
+
+        delegate Peak[] Peakfind1(int n, int start, int end, int Maxtime);
+        delegate Peak[] Peakfind2(int n, int start, int end, int Maxtime, int np);
         delegate Peak[] Peakfind3(int n, int start, int end, int Maxtime, int np, double e1, double e2);
         static Peakfind3 pf3;
-        public delegate void ListViewUpdate(Peak[] ret);
-        public static ListViewUpdate listviewup;
+        static Peakfind2 pf2;
+        static Peakfind1 pf1;
+
+        public delegate void PeakFound(Peak[] ret);
+        public static PeakFound peakfound;
+        public delegate void PeakFinding(int current, int total);
+        public static PeakFinding peakfinding;
+
+
+        static void Peakfind2Finished(IAsyncResult result)
+        {
+            Peak[] ret = pf2.EndInvoke(result);
+            if (ret == null)
+                return;
+            peakfound.Invoke(ret);
+        }
+
         static void Peakfind3Finished(IAsyncResult result)
         {
             Peak[] ret = pf3.EndInvoke(result);
             if (ret == null)
                 return;
-            listviewup.Invoke(ret);
+            peakfound.Invoke(ret);
         }
     }
 }

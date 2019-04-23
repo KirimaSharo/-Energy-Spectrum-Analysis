@@ -46,21 +46,20 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             GLAUX.InitGL(panel1.Handle);
-            GL.glClearColor(0, 1, 1, 0);
+            GL.glClearColor(1, 1, 1, 0);
             DataOriginofDrawX = 0;
             DataOriginofDrawY = 0;
             DrawTimeX = 1;
             DrawTimeY = 1;
             P1Width = panel1.Width;
             P1Height = panel1.Height;
-
             PeakFindMode = 3;
             原始数据RawDataToolStripMenuItem.Checked = true;
-            
+            progressBar1.Hide();
 
             this.panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
-            Counts.listviewup += new Counts.ListViewUpdate(ListView1Update);
-
+            Counts.peakfound += new Counts.PeakFound(ListView1Update);
+            Counts.peakfinding += new Counts.PeakFinding(ProgressBarUpdate);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -314,12 +313,13 @@ namespace WindowsFormsApp1
         {
             if (ROIEnd <= ROIStart)
                 return;
+            progressBar1.Show();
             data.Peakfind(3, ROIStart, ROIEnd, listView1);
 
 
         }
         private delegate void Listup(Peak[] ret);
-        public void ListView1Update(Peak[] ret)
+        private void ListView1Update(Peak[] ret)
         {
             if(this.InvokeRequired)
             {
@@ -328,6 +328,7 @@ namespace WindowsFormsApp1
             }
             else
             {
+                progressBar1.Hide();
                 listView1.BeginUpdate();
                 for (int i = 0; i < ret.Length; i++)
                 {
@@ -341,7 +342,20 @@ namespace WindowsFormsApp1
             }
             
         }
-        
+        private delegate void Progressup(int current, int total);
+        private void ProgressBarUpdate(int current,int total)
+        {
+            if(this.InvokeRequired)
+            {
+                Progressup progressup = new Progressup(ProgressBarUpdate);
+                this.Invoke(progressup, new object[] { current, total });
+            }
+            else
+            {
+                progressBar1.Maximum = total;
+                progressBar1.Value = current;
+            }
+        }
 
 
 
