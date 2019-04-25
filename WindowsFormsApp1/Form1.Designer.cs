@@ -45,7 +45,6 @@
             this.levenbergMaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导数寻峰ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.参数调整ParamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.最大迭代次数MaxIterationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -80,27 +79,27 @@
             this.保存SaveToolStripMenuItem,
             this.另存位SaveAsToolStripMenuItem});
             this.文件FToolStripMenuItem.Name = "文件FToolStripMenuItem";
-            this.文件FToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
-            this.文件FToolStripMenuItem.Text = "文件 File";
+            this.文件FToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.文件FToolStripMenuItem.Text = "文件";
             // 
             // 打开OpenToolStripMenuItem
             // 
             this.打开OpenToolStripMenuItem.Name = "打开OpenToolStripMenuItem";
-            this.打开OpenToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.打开OpenToolStripMenuItem.Text = "打开 Open";
+            this.打开OpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开OpenToolStripMenuItem.Text = "打开";
             this.打开OpenToolStripMenuItem.Click += new System.EventHandler(this.打开OpenToolStripMenuItem_Click);
             // 
             // 保存SaveToolStripMenuItem
             // 
             this.保存SaveToolStripMenuItem.Name = "保存SaveToolStripMenuItem";
-            this.保存SaveToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.保存SaveToolStripMenuItem.Text = "保存 Save";
+            this.保存SaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存SaveToolStripMenuItem.Text = "保存";
             // 
             // 另存位SaveAsToolStripMenuItem
             // 
             this.另存位SaveAsToolStripMenuItem.Name = "另存位SaveAsToolStripMenuItem";
-            this.另存位SaveAsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.另存位SaveAsToolStripMenuItem.Text = "另存位 Save As";
+            this.另存位SaveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.另存位SaveAsToolStripMenuItem.Text = "另存为";
             this.另存位SaveAsToolStripMenuItem.Click += new System.EventHandler(this.另存位SaveAsToolStripMenuItem_Click);
             // 
             // 数据DataToolStripMenuItem
@@ -119,14 +118,14 @@
             this.原始数据RawDataToolStripMenuItem,
             this.光滑SmoothToolStripMenuItem});
             this.视图ViewToolStripMenuItem.Name = "视图ViewToolStripMenuItem";
-            this.视图ViewToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.视图ViewToolStripMenuItem.Text = "视图 View";
+            this.视图ViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.视图ViewToolStripMenuItem.Text = "视图";
             // 
             // 原始数据RawDataToolStripMenuItem
             // 
             this.原始数据RawDataToolStripMenuItem.Name = "原始数据RawDataToolStripMenuItem";
-            this.原始数据RawDataToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.原始数据RawDataToolStripMenuItem.Text = "原始数据 Raw Data";
+            this.原始数据RawDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.原始数据RawDataToolStripMenuItem.Text = "原始数据";
             this.原始数据RawDataToolStripMenuItem.Click += new System.EventHandler(this.原始数据RawDataToolStripMenuItem_Click);
             // 
             // 光滑SmoothToolStripMenuItem
@@ -135,8 +134,8 @@
             this.参数设置ToolStripMenuItem,
             this.参数自动ToolStripMenuItem});
             this.光滑SmoothToolStripMenuItem.Name = "光滑SmoothToolStripMenuItem";
-            this.光滑SmoothToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.光滑SmoothToolStripMenuItem.Text = "光滑 Smooth";
+            this.光滑SmoothToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.光滑SmoothToolStripMenuItem.Text = "光滑";
             this.光滑SmoothToolStripMenuItem.Click += new System.EventHandler(this.光滑SmoothToolStripMenuItem_Click);
             // 
             // 参数设置ToolStripMenuItem
@@ -161,46 +160,43 @@
             this.levenbergMaToolStripMenuItem,
             this.导数寻峰ToolStripMenuItem});
             this.算法AlgorithmToolStripMenuItem.Name = "算法AlgorithmToolStripMenuItem";
-            this.算法AlgorithmToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.算法AlgorithmToolStripMenuItem.Text = "算法 Algorithm";
+            this.算法AlgorithmToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.算法AlgorithmToolStripMenuItem.Text = "算法";
             // 
             // 期望最大算法ExpectMaxToolStripMenuItem
             // 
             this.期望最大算法ExpectMaxToolStripMenuItem.Name = "期望最大算法ExpectMaxToolStripMenuItem";
-            this.期望最大算法ExpectMaxToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.期望最大算法ExpectMaxToolStripMenuItem.Text = "期望最大算法 Expect Max";
+            this.期望最大算法ExpectMaxToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.期望最大算法ExpectMaxToolStripMenuItem.Text = "期望最大算法";
+            this.期望最大算法ExpectMaxToolStripMenuItem.Click += new System.EventHandler(this.期望最大算法ExpectMaxToolStripMenuItem_Click);
             // 
             // 粒子群算法ParticalToolStripMenuItem
             // 
             this.粒子群算法ParticalToolStripMenuItem.Name = "粒子群算法ParticalToolStripMenuItem";
-            this.粒子群算法ParticalToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.粒子群算法ParticalToolStripMenuItem.Text = "粒子群算法 Partical";
+            this.粒子群算法ParticalToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.粒子群算法ParticalToolStripMenuItem.Text = "粒子群算法";
+            this.粒子群算法ParticalToolStripMenuItem.Click += new System.EventHandler(this.粒子群算法ParticalToolStripMenuItem_Click);
             // 
             // levenbergMaToolStripMenuItem
             // 
             this.levenbergMaToolStripMenuItem.Name = "levenbergMaToolStripMenuItem";
-            this.levenbergMaToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.levenbergMaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.levenbergMaToolStripMenuItem.Text = "Levenberg_Marquardt";
+            this.levenbergMaToolStripMenuItem.Click += new System.EventHandler(this.levenbergMaToolStripMenuItem_Click);
             // 
             // 导数寻峰ToolStripMenuItem
             // 
             this.导数寻峰ToolStripMenuItem.Name = "导数寻峰ToolStripMenuItem";
-            this.导数寻峰ToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.导数寻峰ToolStripMenuItem.Text = "导数寻峰 Derivatives";
+            this.导数寻峰ToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.导数寻峰ToolStripMenuItem.Text = "导数寻峰";
+            this.导数寻峰ToolStripMenuItem.Click += new System.EventHandler(this.导数寻峰ToolStripMenuItem_Click);
             // 
             // 参数调整ParamsToolStripMenuItem
             // 
-            this.参数调整ParamsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.最大迭代次数MaxIterationToolStripMenuItem});
             this.参数调整ParamsToolStripMenuItem.Name = "参数调整ParamsToolStripMenuItem";
-            this.参数调整ParamsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.参数调整ParamsToolStripMenuItem.Text = "参数 params";
-            // 
-            // 最大迭代次数MaxIterationToolStripMenuItem
-            // 
-            this.最大迭代次数MaxIterationToolStripMenuItem.Name = "最大迭代次数MaxIterationToolStripMenuItem";
-            this.最大迭代次数MaxIterationToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.最大迭代次数MaxIterationToolStripMenuItem.Text = "最大迭代次数 Max Iteration";
+            this.参数调整ParamsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.参数调整ParamsToolStripMenuItem.Text = "参数调整";
+            this.参数调整ParamsToolStripMenuItem.Click += new System.EventHandler(this.参数调整ParamsToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -369,7 +365,6 @@
         private System.Windows.Forms.ToolStripMenuItem levenbergMaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 导数寻峰ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 参数调整ParamsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 最大迭代次数MaxIterationToolStripMenuItem;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Panel panel2;
     }

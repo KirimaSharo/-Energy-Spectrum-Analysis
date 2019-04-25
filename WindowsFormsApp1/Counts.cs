@@ -1219,7 +1219,7 @@ namespace WindowsFormsApp1
             return ret;
         }
 
-        public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd, ListView listView1)
+        public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd,Params param)
         {
             Peak[] ret = null;
             if (PeakFindMode == 0)
@@ -1252,17 +1252,17 @@ namespace WindowsFormsApp1
             else if (PeakFindMode == 1)
             {
                 pf1 = new Peakfind1(this.ExpectMax);
-                pf1.BeginInvoke(1, ROIStart, ROIEnd, 500, new AsyncCallback(Peakfind2Finished), null);
+                pf1.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, new AsyncCallback(Peakfind1Finished), null);
             }
             else if (PeakFindMode == 2)
             {
                 pf2 = new Peakfind2(this.Partial);
-                pf2.BeginInvoke(1, ROIStart, ROIEnd, 200, 200,new AsyncCallback(Peakfind2Finished), null);
+                pf2.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, param.np,new AsyncCallback(Peakfind2Finished), null);
             }
             else if (PeakFindMode == 3)
             {
                 pf3 = new Peakfind3(this.LevenbergMarquardt);
-                pf3.BeginInvoke(1, ROIStart, ROIEnd, 1000, 1, 0, 0, new AsyncCallback(Peakfind3Finished), null);
+                pf3.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, param.np, param.e1, param.e2, new AsyncCallback(Peakfind3Finished), null);
             }
             if (ret == null)
                 return;
@@ -1282,6 +1282,13 @@ namespace WindowsFormsApp1
         public delegate void PeakFinding(int current, int total);
         public static PeakFinding peakfinding;
 
+        static void Peakfind1Finished(IAsyncResult result)
+        {
+            Peak[] ret = pf1.EndInvoke(result);
+            if (ret == null)
+                return;
+            peakfound.Invoke(ret);
+        }
 
         static void Peakfind2Finished(IAsyncResult result)
         {
@@ -1298,6 +1305,65 @@ namespace WindowsFormsApp1
                 return;
             peakfound.Invoke(ret);
         }
+        public struct Params
+        {
+            public int n;
+            public int maxtime;
+            public int np;
+            public double e1;
+            public double e2;
+        }
+
+
+        public static void paramset(ref Params param)
+        {
+            paramset(1, 200, 200, 0, 0,ref param);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="n">
+        /// For ExpectMax,n=1||n=2,For Div,n=1,For others,n<=5
+        /// </param>
+        /// <param name="maxtime">
+        /// need to >=10
+        /// </param>
+        /// <param name="np">
+        /// only valid for partical,need to >10
+        /// </param>
+        /// <param name="e1">
+        /// only valid for LM,need to >0
+        /// </param>
+        /// <param name="e2">
+        /// only valid for LM,need to >0
+        /// </param>
+        public static void paramset(int n,int maxtime,int np,double e1,double e2,ref Params param)
+        {
+            if (n < 1)
+                param.n = 1;
+            else if (n < 6)
+                param.n = n;
+            else
+                param.n = 5;
+            if (maxtime >= 10)
+                param.maxtime = maxtime;
+            else
+                param.maxtime = 10;
+            if (np >= 10)
+                param.np = np;
+            else
+                param.np = 10;
+            if (e1 > 0)
+                param.e1 = e1;
+            else
+                param.e1 = 0;
+            if (e2 > 0)
+                param.e2 = e2;
+            else
+                param.e2 = 0;
+
+        }
+        
     }
 }
 

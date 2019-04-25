@@ -39,7 +39,8 @@ namespace WindowsFormsApp1
         private int MouseX;
         private int MouseY;
         private bool P1MouseDown = false;
-        
+
+        private Counts.Params Params;
 
 
         public Form1()
@@ -54,8 +55,11 @@ namespace WindowsFormsApp1
             P1Width = panel1.Width;
             P1Height = panel1.Height;
             PeakFindMode = 3;
+            levenbergMaToolStripMenuItem.Checked = true;
             原始数据RawDataToolStripMenuItem.Checked = true;
             progressBar1.Hide();
+
+            Counts.paramset(ref Params);
 
             this.panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
             Counts.peakfound += new Counts.PeakFound(ListView1Update);
@@ -157,6 +161,16 @@ namespace WindowsFormsApp1
             string str;
             for (int i = Xaxistime * (int)(DataOriginofDrawX / Xaxistime); i < DataOriginofDrawX + climit; i += Xaxistime) 
             {
+                for (int k = 1; k < 10; k++)
+                {
+                    float x1 = (float)(panel1.Location.X - 1 + (i + k * Xaxistime / 10.0 - DataOriginofDrawX) * (DrawTimeX * dx));
+                    if (x1 < panel1.Location.X)
+                        continue;
+                    if (k != 5)
+                        G.DrawLine(P, x1, panel1.Height, x1, panel1.Height + 2);
+                    else
+                        G.DrawLine(P, x1, panel1.Height, x1, panel1.Height + 4);
+                }
                 float x = (float)(panel1.Location.X - 1 + (i - DataOriginofDrawX) * (DrawTimeX * dx));
                 if (x < panel1.Location.X) 
                     continue;
@@ -191,10 +205,18 @@ namespace WindowsFormsApp1
 
             for (int i = Yaxistime * (int)(DataOriginofDrawY / Yaxistime); i < DataOriginofDrawY + nlimit; i += Yaxistime)
             {
+                for (int k = 1; k < 5; k++)
+                {
+                    float y1 = (float)(panel1.Height - (i + k * Yaxistime / 5.0 - DataOriginofDrawY) * (DrawTimeY * dy));
+                    if (y1 > panel1.Height)
+                        continue;
+                    G.DrawLine(P, panel1.Location.X - 1, y1, panel1.Location.X - 3, y1);
+                }
                 float y = (float)(panel1.Height - (i - DataOriginofDrawY) * (DrawTimeY * dy));
                 if (y > panel1.Height)
                     continue;
                 G.DrawLine(P, panel1.Location.X - 1, y, panel1.Location.X - 6, y);
+
                 if (y > panel1.Height - 7) 
                     continue;
                 if (i < 10000000)
@@ -490,7 +512,7 @@ namespace WindowsFormsApp1
             if (ROIEnd <= ROIStart)
                 return;
             progressBar1.Show();
-            data.Peakfind(3, ROIStart, ROIEnd, listView1);
+            data.Peakfind(PeakFindMode, ROIStart, ROIEnd, Params);
 
 
         }
@@ -606,6 +628,54 @@ namespace WindowsFormsApp1
         {
             data.Smooth(smoothn, ref drawsmooth);
             Draw();
+        }
+
+        private void 期望最大算法ExpectMaxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PeakFindMode = 1;
+            期望最大算法ExpectMaxToolStripMenuItem.Checked = true;
+            粒子群算法ParticalToolStripMenuItem.Checked = false;
+            levenbergMaToolStripMenuItem.Checked = false;
+            导数寻峰ToolStripMenuItem.Checked = false;
+        }
+
+        private void 粒子群算法ParticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PeakFindMode = 2;
+            期望最大算法ExpectMaxToolStripMenuItem.Checked = false;
+            粒子群算法ParticalToolStripMenuItem.Checked = true;
+            levenbergMaToolStripMenuItem.Checked = false;
+            导数寻峰ToolStripMenuItem.Checked = false;
+        }
+
+        private void levenbergMaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PeakFindMode = 3;
+            期望最大算法ExpectMaxToolStripMenuItem.Checked = false;
+            粒子群算法ParticalToolStripMenuItem.Checked = false;
+            levenbergMaToolStripMenuItem.Checked = true;
+            导数寻峰ToolStripMenuItem.Checked = false;
+        }
+
+        private void 导数寻峰ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PeakFindMode = 0;
+            期望最大算法ExpectMaxToolStripMenuItem.Checked = false;
+            粒子群算法ParticalToolStripMenuItem.Checked = false;
+            levenbergMaToolStripMenuItem.Checked = false;
+            导数寻峰ToolStripMenuItem.Checked = true;
+        }
+
+        private void 参数调整ParamsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            Form3 f3 = new Form3(Params);
+            f3.FormClosing += new FormClosingEventHandler(Form3Closing);
+
+        }
+        private void Form3Closing(object sender, EventArgs e)
+        {
+            Params = ((Form3)sender).param;
         }
     }
 }
