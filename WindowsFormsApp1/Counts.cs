@@ -180,7 +180,7 @@ namespace WindowsFormsApp1
         public void Smooth(int n, ref double[] aim)
         {
             double[] a = this.fix;
-            Smooth(n, -5);
+            Smooth(n, -10);
             aim = this.fix;
             this.fix = a;
         }
@@ -718,7 +718,7 @@ namespace WindowsFormsApp1
             int gbest;
 
             int i, j, k, l;
-            double s, max, min, best;
+            double s, max, min, best,Maxi;
             double[] parammax, parammin;
 
 
@@ -733,10 +733,11 @@ namespace WindowsFormsApp1
                 if (this.count[l] > max)
                     max = this.count[l];
             }
-            parammax[1] = max;
-            parammin[1] = 0;
+            Maxi = max;
             parammax[0] = this.fix[end] / (end - start) * 1.1;
             parammin[0] = -this.fix[start] / (end - start) * 1.1;
+            parammax[1] = -parammin[0] * end;
+            parammin[1] = -parammax[0] * start;
 
 
             for (i = 0; i < np; i++)
@@ -761,7 +762,7 @@ namespace WindowsFormsApp1
                         }
                         else
                         {
-                            p[i].param[j, 0] = r.NextDouble() * parammax[1] / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]);
+                            p[i].param[j, 0] = r.NextDouble() * max / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]);
                         }
 
                     }
@@ -769,17 +770,8 @@ namespace WindowsFormsApp1
                 p[i].param[0, 2] = 0;
                 p[i].param[0, 1] = r1.NextDouble() * (parammax[0] - parammin[0]) + parammin[0];
 
-                if (p[i].param[0, 1] >= 0)
-                {
-                    min = -start * p[i].param[0, 1];
-                    max = 1.1 * this.fix[end] - end * p[i].param[0, 1];
-                }
-                else
-                {
-                    min = -end * p[i].param[0, 1];
-                    max = 1.1 * this.fix[start] - start * p[i].param[0, 1];
-                }
-                p[i].param[0, 0] = r1.NextDouble() * (max - min) + min;
+
+                p[i].param[0, 0] = r1.NextDouble() * (parammax[1] - parammin[1]) + parammin[1];
             }
 
             best = adaptivity(p[0], n, start, end);
@@ -837,6 +829,11 @@ namespace WindowsFormsApp1
                                     p[i].param[j, 2] = (end - start) / 2.0;
                                     p[i].speed[j, 2] = 0;
                                 }
+                                if(p[i].param[j, 2]<0)
+                                {
+                                    p[i].param[j, 2] = 0;
+                                    p[i].speed[j, 2] = 0;
+                                }
 
                             }
                             else if (k == 1)
@@ -858,9 +855,14 @@ namespace WindowsFormsApp1
                             {
                                 p[i].speed[j, 0] = w * p[i].speed[j, 0] + c1 * (p[i].bestparam[j, 0] - p[i].param[j, 0]) * r1.NextDouble() + c2 * (p[gbest].bestparam[j, 0] - p[i].param[j, 0]) * r1.NextDouble();
                                 p[i].param[j, 0] += p[i].speed[j, 0];
-                                if (p[i].param[j, 0] > parammax[1] / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]))
+                                if (p[i].param[j, 0] > Maxi / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]))
                                 {
-                                    p[i].param[j, 0] = parammax[1] / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]);
+                                    p[i].param[j, 0] = Maxi / Norm(p[i].param[j, 1], p[i].param[j, 1], p[i].param[j, 2]);
+                                    p[i].speed[j, 0] = 0;
+                                }
+                                if (p[i].param[j, 0] < 0)
+                                {
+                                    p[i].param[j, 0] = 0;
                                     p[i].speed[j, 0] = 0;
                                 }
                             }
@@ -968,15 +970,17 @@ namespace WindowsFormsApp1
                                 gbest = p1;
                         }
                         double vabs = 0;
+                        double v1abs = 0;
                         for (j = 0; j <= n; j++)
                             for (k = 0; k < 3; k++)
                             {
+                                v1abs += p[p1].speed[j, k];
                                 p[p1].speed[j, k] += p[p2].speed[j, k];
                                 vabs += Abs(p[p1].speed[j, k]);
                             }
                         for (j = 0; j <= n; j++)
                             for (k = 0; k < 3; k++)
-                                p[p1].speed[j, k] = p[p1].speed[j, k] / vabs;
+                                p[p1].speed[j, k] = p[p1].speed[j, k] / vabs * v1abs;
 
                     }
 
@@ -1002,15 +1006,17 @@ namespace WindowsFormsApp1
                         else
                         {
                             double vabs = 0;
+                            double v2abs = 0;
                             for (j = 0; j <= n; j++)
                                 for (k = 0; k < 3; k++)
                                 {
+                                    v2abs += p[p2].speed[j, k];
                                     p[p2].speed[j, k] += p[p1].speed[j, k];
                                     vabs += Abs(p[p2].speed[j, k]);
                                 }
                             for (j = 0; j <= n; j++)
                                 for (k = 0; k < 3; k++)
-                                    p[p2].speed[j, k] = p[p2].speed[j, k] / vabs;
+                                    p[p2].speed[j, k] = p[p2].speed[j, k] / vabs*v2abs;
                         }
 
 
@@ -1025,6 +1031,10 @@ namespace WindowsFormsApp1
                     P1.speed = new double[n + 1, 3];
                     P1.best = 0;
                     double G = GaussRand(1, 0.4, R);
+                    if (G < 0) 
+                    {
+                        G = 0;
+                    }
                     int p1 = R.Next(0, np);
                     for (j = 0; j <= n; j++)
                         for (k = 0; k < 3; k++)
@@ -1219,8 +1229,13 @@ namespace WindowsFormsApp1
             return ret;
         }
 
-        public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd,Params param)
+        public void Peakfind(int PeakFindMode,int ROIStart,int ROIEnd,Params param,int n)
         {
+            if (count == null)
+                return;
+            if (peakfounded == null)
+                peakfounded = new PeakFound(Peakfounded);
+            this.param = param;
             Peak[] ret = null;
             if (PeakFindMode == 0)
             {
@@ -1245,30 +1260,97 @@ namespace WindowsFormsApp1
                     j++;
                 }
                 m = j - i;
-                ret[0].S = m;
+                ret[0].S = m / 2.335;
                 ret[0].A = s;
 
             }
             else if (PeakFindMode == 1)
             {
-                pf1 = new Peakfind1(this.ExpectMax);
-                pf1.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, new AsyncCallback(Peakfind1Finished), null);
+                if (pf1 == null)
+                    pf1 = new Peakfind1(this.ExpectMax);
+                pf1.BeginInvoke(n, ROIStart, ROIEnd, param.maxtime, new AsyncCallback(Peakfind1Finished), null);
             }
             else if (PeakFindMode == 2)
             {
-                pf2 = new Peakfind2(this.Partial);
-                pf2.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, param.np,new AsyncCallback(Peakfind2Finished), null);
+                if (pf2 == null)
+                    pf2 = new Peakfind2(this.Partial);
+                pf2.BeginInvoke(n, ROIStart, ROIEnd, param.maxtime, param.np,new AsyncCallback(Peakfind2Finished), null);
             }
             else if (PeakFindMode == 3)
             {
-                pf3 = new Peakfind3(this.LevenbergMarquardt);
-                pf3.BeginInvoke(param.n, ROIStart, ROIEnd, param.maxtime, param.np, param.e1, param.e2, new AsyncCallback(Peakfind3Finished), null);
+                if (pf3 == null)
+                    pf3 = new Peakfind3(this.LevenbergMarquardt);
+                pf3.BeginInvoke(n, ROIStart, ROIEnd, param.maxtime, param.np, param.e1, param.e2, new AsyncCallback(Peakfind3Finished), null);
             }
             if (ret == null)
                 return;
-            peakfound.Invoke(ret);
+            peakfounded.Invoke(ret);
         }
 
+        public void Peakfind(int PeakFindMode, Params param)
+        {
+            if (count == null)
+                return;
+            this.param = param;
+            Smooth((int)(totalchannel/20.0), -10);
+            int min1 = 1;
+            int max = -1;
+            int min2 = -1;
+            int n=0;
+            for (int i = 1; i < totalchannel - 1; i++) 
+            {
+                if (fix[i] <= fix[i + 1] && fix[i - 1] >= fix[i] && (fix[i - 1] != fix[i]||fix[i+1]!=fix[i]))
+                {
+                    if (max == -1||(i-min1) / (double)Max(n, 1) > (int)(totalchannel / 2.0))
+                        min1 = i;
+                    else if ((fix[max] - fix[min1]) / (double)(fix[max] - fix[i]) < 2 && (fix[max] - fix[min1]) / (double)(fix[max] - fix[i]) > 0.5)
+                        min2 = i;
+                }
+                else if (fix[i] >= fix[i + 1] && fix[i - 1] <= fix[i] && (fix[i - 1] != fix[i] || fix[i + 1] != fix[i])) 
+                {
+                    max = i;
+                    n++;
+                }
+                if (min1 > 0 && min2 > 0) 
+                {
+                    n = 0;
+                    for(int j=min1;j<min2;j++)
+                    {
+                        if (fix[j - 1] + fix[j + 1] - 2 * fix[j] > 0 && fix[j + 2] + fix[j] - 2 * fix[j + 1] < 0)
+                            n++;
+
+                    }
+                    if ((min2 - min1) / (double)Max(n, 1) < (int)(totalchannel / 10.0))
+                        Peakfind(PeakFindMode, min1, min2, param, n);
+                    min1 = min2;
+                    min2 = -1;
+                    max = -1;
+                    n = 0;
+                }
+            }
+        }
+        private void Peakfounded(Peak[] ret)
+        {
+            int j = 0;
+            for(int i=0;i<ret.Length;i++)
+            {
+                if (ret[i].S < param.Uratio * ret[i].U && ret[i].U > 0 && ret[i].S > 0 && ret[i].A > 0) 
+                    j++;
+            }
+            Peak[] r = new Peak[j];
+            j = 0;
+            for (int i = 0; i < ret.Length; i++)
+            {
+                if (ret[i].S < param.Uratio * ret[i].U && ret[i].U > 0 && ret[i].S > 0 && ret[i].A > 0)
+                {
+                    r[j] = ret[i];
+                    j++;
+                }
+   
+            }
+                peakfound.Invoke(r);
+
+        }
 
         delegate Peak[] Peakfind1(int n, int start, int end, int Maxtime);
         delegate Peak[] Peakfind2(int n, int start, int end, int Maxtime, int np);
@@ -1279,6 +1361,7 @@ namespace WindowsFormsApp1
 
         public delegate void PeakFound(Peak[] ret);
         public static PeakFound peakfound;
+        private static PeakFound peakfounded;
         public delegate void PeakFinding(int current, int total);
         public static PeakFinding peakfinding;
 
@@ -1287,7 +1370,7 @@ namespace WindowsFormsApp1
             Peak[] ret = pf1.EndInvoke(result);
             if (ret == null)
                 return;
-            peakfound.Invoke(ret);
+            peakfounded.Invoke(ret);
         }
 
         static void Peakfind2Finished(IAsyncResult result)
@@ -1295,7 +1378,7 @@ namespace WindowsFormsApp1
             Peak[] ret = pf2.EndInvoke(result);
             if (ret == null)
                 return;
-            peakfound.Invoke(ret);
+            peakfounded.Invoke(ret);
         }
 
         static void Peakfind3Finished(IAsyncResult result)
@@ -1303,7 +1386,7 @@ namespace WindowsFormsApp1
             Peak[] ret = pf3.EndInvoke(result);
             if (ret == null)
                 return;
-            peakfound.Invoke(ret);
+            peakfounded.Invoke(ret);
         }
         public struct Params
         {
@@ -1312,12 +1395,14 @@ namespace WindowsFormsApp1
             public int np;
             public double e1;
             public double e2;
+            public double Uratio;
         }
 
+        private Params param;
 
         public static void paramset(ref Params param)
         {
-            paramset(1, 200, 200, 0, 0,ref param);
+            paramset(1, 1000, 200, 0, 0,0.05,ref param);
         }
         /// <summary>
         /// 
@@ -1337,7 +1422,7 @@ namespace WindowsFormsApp1
         /// <param name="e2">
         /// only valid for LM,need to >0
         /// </param>
-        public static void paramset(int n,int maxtime,int np,double e1,double e2,ref Params param)
+        public static void paramset(int n,int maxtime,int np,double e1,double e2,double Uratio,ref Params param)
         {
             if (n < 1)
                 param.n = 1;
@@ -1361,6 +1446,12 @@ namespace WindowsFormsApp1
                 param.e2 = e2;
             else
                 param.e2 = 0;
+            if (Uratio > 0.5)
+                param.Uratio = 0.5;
+            else if (Uratio < 0.001)
+                param.Uratio = 0.001;
+            else
+                param.Uratio = Uratio;
 
         }
         

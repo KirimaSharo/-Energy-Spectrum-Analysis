@@ -90,7 +90,7 @@ namespace WindowsFormsApp1
             GL.glClear(GLCONST.GL_COLOR_BUFFER_BIT);
             GL.glViewport(-originX, -originY, (int)(climit * DrawTimeX * dx), (int)(nlimit * DrawTimeY * dy));
             GL.glPointSize((float)(dx*DrawTimeX));
-            GL.glBegin(GLCONST.GL_LINES);
+            GL.glBegin(GLCONST.GL_POINTS);
             GL.glColor3(1.0, 0, 0);
             for (int i = (int)(DataOriginofDrawX); i < Min(data.TotalChannel, DataOriginofDrawX + climit); i++)
             {
@@ -509,13 +509,21 @@ namespace WindowsFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (ROIEnd <= ROIStart)
+            if (ROIEnd <= ROIStart || data == null)
                 return;
             progressBar1.Show();
-            data.Peakfind(PeakFindMode, ROIStart, ROIEnd, Params);
-
-
+            data.Peakfind(PeakFindMode,ROIStart,ROIEnd, Params,Params.n);
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (data == null)
+                return;
+            data.Peakfind(PeakFindMode, Params);
+        }
+
+
+
         private delegate void Listup(Peak[] ret);
         private void ListView1Update(Peak[] ret)
         {
@@ -532,7 +540,7 @@ namespace WindowsFormsApp1
                 {
                     ListViewItem lvi = new ListViewItem();
                     lvi.Text = ret[i].U.ToString();
-                    lvi.SubItems.Add(ret[i].S.ToString());
+                    lvi.SubItems.Add((ret[i].S*2.335).ToString());
                     lvi.SubItems.Add(ret[i].A.ToString());
                     listView1.Items.Add(lvi);
                 }
@@ -552,6 +560,7 @@ namespace WindowsFormsApp1
             {
                 progressBar1.Maximum = total;
                 progressBar1.Value = current;
+                progressBar1.Show();
             }
         }
 
@@ -565,6 +574,8 @@ namespace WindowsFormsApp1
             if(open.ShowDialog()==DialogResult.OK)
             {
                 data = new Counts(open.FileName);
+                smoothn = data.TotalChannel / 20;
+                DrawDataReNew(0, 0, 1, 1);
                 Draw();
 
             }
@@ -583,6 +594,7 @@ namespace WindowsFormsApp1
         {
             原始数据RawDataToolStripMenuItem.Checked = true;
             光滑SmoothToolStripMenuItem.Checked = false;
+            Draw();
         }
 
         private void 光滑SmoothToolStripMenuItem_Click(object sender, EventArgs e)
@@ -677,5 +689,7 @@ namespace WindowsFormsApp1
         {
             Params = ((Form3)sender).param;
         }
+
+
     }
 }

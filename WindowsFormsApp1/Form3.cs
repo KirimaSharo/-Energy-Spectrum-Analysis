@@ -32,6 +32,7 @@ namespace WindowsFormsApp1
             textBox3.Text = param.np.ToString();
             textBox4.Text = param.e1.ToString();
             textBox5.Text = param.e2.ToString();
+            textBox6.Text = param.Uratio.ToString();
             this.Show();
         }
 
@@ -42,8 +43,9 @@ namespace WindowsFormsApp1
             param.np = Convert.ToInt32(textBox3.Text);
             param.e1 = Convert.ToDouble(textBox4.Text);
             param.e2 = Convert.ToDouble(textBox5.Text);
-            Counts.paramset(param.n, param.maxtime, param.np, param.e1, param.e2,ref param1);
-            if (param.n != param1.n || param.maxtime != param1.maxtime || param.np != param1.np || param.e1 != param1.e1 || param.e2 != param1.e2) 
+            param.Uratio = Convert.ToDouble(textBox6.Text);
+            Counts.paramset(param.n, param.maxtime, param.np, param.e1, param.e2,param.Uratio,ref param1);
+            if (param.n != param1.n || param.maxtime != param1.maxtime || param.np != param1.np || param.e1 != param1.e1 || param.e2 != param1.e2 || param.Uratio != param1.Uratio) 
             {
                 param = param1;
                 textBox1.Text = param.n.ToString();
@@ -51,6 +53,7 @@ namespace WindowsFormsApp1
                 textBox3.Text = param.np.ToString();
                 textBox4.Text = param.e1.ToString();
                 textBox5.Text = param.e2.ToString();
+                textBox6.Text = param.Uratio.ToString();
                 label6.Show();
             }
             else

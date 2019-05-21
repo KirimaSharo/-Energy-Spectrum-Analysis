@@ -57,6 +57,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -85,20 +86,20 @@
             // 打开OpenToolStripMenuItem
             // 
             this.打开OpenToolStripMenuItem.Name = "打开OpenToolStripMenuItem";
-            this.打开OpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开OpenToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.打开OpenToolStripMenuItem.Text = "打开";
             this.打开OpenToolStripMenuItem.Click += new System.EventHandler(this.打开OpenToolStripMenuItem_Click);
             // 
             // 保存SaveToolStripMenuItem
             // 
             this.保存SaveToolStripMenuItem.Name = "保存SaveToolStripMenuItem";
-            this.保存SaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存SaveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.保存SaveToolStripMenuItem.Text = "保存";
             // 
             // 另存位SaveAsToolStripMenuItem
             // 
             this.另存位SaveAsToolStripMenuItem.Name = "另存位SaveAsToolStripMenuItem";
-            this.另存位SaveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.另存位SaveAsToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.另存位SaveAsToolStripMenuItem.Text = "另存为";
             this.另存位SaveAsToolStripMenuItem.Click += new System.EventHandler(this.另存位SaveAsToolStripMenuItem_Click);
             // 
@@ -118,13 +119,13 @@
             this.原始数据RawDataToolStripMenuItem,
             this.光滑SmoothToolStripMenuItem});
             this.视图ViewToolStripMenuItem.Name = "视图ViewToolStripMenuItem";
-            this.视图ViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.视图ViewToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.视图ViewToolStripMenuItem.Text = "视图";
             // 
             // 原始数据RawDataToolStripMenuItem
             // 
             this.原始数据RawDataToolStripMenuItem.Name = "原始数据RawDataToolStripMenuItem";
-            this.原始数据RawDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.原始数据RawDataToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.原始数据RawDataToolStripMenuItem.Text = "原始数据";
             this.原始数据RawDataToolStripMenuItem.Click += new System.EventHandler(this.原始数据RawDataToolStripMenuItem_Click);
             // 
@@ -134,7 +135,7 @@
             this.参数设置ToolStripMenuItem,
             this.参数自动ToolStripMenuItem});
             this.光滑SmoothToolStripMenuItem.Name = "光滑SmoothToolStripMenuItem";
-            this.光滑SmoothToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.光滑SmoothToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.光滑SmoothToolStripMenuItem.Text = "光滑";
             this.光滑SmoothToolStripMenuItem.Click += new System.EventHandler(this.光滑SmoothToolStripMenuItem_Click);
             // 
@@ -160,7 +161,7 @@
             this.levenbergMaToolStripMenuItem,
             this.导数寻峰ToolStripMenuItem});
             this.算法AlgorithmToolStripMenuItem.Name = "算法AlgorithmToolStripMenuItem";
-            this.算法AlgorithmToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.算法AlgorithmToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.算法AlgorithmToolStripMenuItem.Text = "算法";
             // 
             // 期望最大算法ExpectMaxToolStripMenuItem
@@ -194,7 +195,7 @@
             // 参数调整ParamsToolStripMenuItem
             // 
             this.参数调整ParamsToolStripMenuItem.Name = "参数调整ParamsToolStripMenuItem";
-            this.参数调整ParamsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.参数调整ParamsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.参数调整ParamsToolStripMenuItem.Text = "参数调整";
             this.参数调整ParamsToolStripMenuItem.Click += new System.EventHandler(this.参数调整ParamsToolStripMenuItem_Click);
             // 
@@ -217,19 +218,20 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.BackColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(531, 3);
+            this.button1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Location = new System.Drawing.Point(619, 30);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(66, 22);
+            this.button1.Size = new System.Drawing.Size(49, 22);
             this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
+            this.button1.Text = "感兴区";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(600, 3);
+            this.textBox1.Location = new System.Drawing.Point(671, 30);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(60, 21);
             this.textBox1.TabIndex = 4;
@@ -237,7 +239,7 @@
             // textBox2
             // 
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(671, 3);
+            this.textBox2.Location = new System.Drawing.Point(740, 30);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(60, 21);
             this.textBox2.TabIndex = 5;
@@ -246,7 +248,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(660, 6);
+            this.label1.Location = new System.Drawing.Point(730, 33);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(11, 12);
             this.label1.TabIndex = 6;
@@ -255,11 +257,12 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(737, 3);
+            this.button2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.Location = new System.Drawing.Point(630, 57);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(63, 21);
+            this.button2.Size = new System.Drawing.Size(68, 21);
             this.button2.TabIndex = 7;
-            this.button2.Text = "button2";
+            this.button2.Text = "寻峰";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -271,9 +274,9 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.Location = new System.Drawing.Point(620, 25);
+            this.listView1.Location = new System.Drawing.Point(620, 114);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(180, 424);
+            this.listView1.Size = new System.Drawing.Size(180, 335);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -293,7 +296,7 @@
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(630, 217);
+            this.progressBar1.Location = new System.Drawing.Point(630, 270);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(158, 17);
             this.progressBar1.TabIndex = 9;
@@ -311,11 +314,24 @@
             this.panel2.TabIndex = 10;
             this.panel2.TabStop = true;
             // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.Location = new System.Drawing.Point(720, 57);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(68, 21);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "自动寻峰";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button2);
@@ -367,6 +383,7 @@
         private System.Windows.Forms.ToolStripMenuItem 参数调整ParamsToolStripMenuItem;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button button3;
     }
 }
 
